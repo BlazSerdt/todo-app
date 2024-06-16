@@ -147,6 +147,7 @@ body{
 
 thead tr th{
     background-color: rgb(35, 35, 35);
+    justify-content: center;
 }
 
 tbody tr th{

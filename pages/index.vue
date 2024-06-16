@@ -61,6 +61,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="todos.length === 0">
+              <th colspan="3">No tasks found.</th>
+            </tr>
             <tr v-for="todo in todos">
               <th>{{ todo.task }}</th>
               <th>{{ todo.formattedDate }}</th>
