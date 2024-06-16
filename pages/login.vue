@@ -32,10 +32,10 @@
   <div class="form-container">
     <Header title="LOGIN"/>
     <form class="form">
-      <label for="email" class="form-label">E-Mail</label><br>
-      <input type="text" id="email" name="email" class="form-input" v-model="email"><br>
+      <label for="email" class="form-label" >E-Mail</label><br>
+      <input type="text" id="email" name="email" class="form-input" v-model="email" autocomplete="off"><br>
       <label for="password" class="form-label">Password</label><br>
-      <input type="password" id="password" name="password" class="form-input" v-model="password"><br>
+      <input type="password" id="password" name="password" class="form-input" v-model="password" autocomplete="off"><br>
     </form>
     <p class="error" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
     <button class="submit-button" @click="handleLogin">Sign in</button>
