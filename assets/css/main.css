@@ -100,6 +100,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 700px;
 }
 
 .todo-container{
@@ -143,21 +144,26 @@ body{
     border-spacing: 0;
     border-radius: 6px;
     color: white;
+    table-layout: fixed;
+}
+
+.tasks-table thead {
+    text-align: center;
+}
+
+.tasks-table th {
+    padding: 12px 0;
+    font-weight: normal;
+    font-size: 14px;
+    width: calc(100% / 3);
 }
 
 thead tr th{
     background-color: rgb(35, 35, 35);
-    justify-content: center;
 }
 
 tbody tr th{
     background-color: rgb(50, 50, 50);
-}
-
-th {
-    padding: 10px 14px;
-    font-weight: normal;
-    font-size: 14px;
 }
 
 .options-row{

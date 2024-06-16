@@ -30,7 +30,7 @@
       return;
     }
 
-    todos.value.push({ task: task.value, formattedDate: formattedDate.value });
+    todos.value.push({ task: task.value, date: formattedDate.value });
 
     task.value = '';
     date.value = '';
@@ -66,7 +66,7 @@
             </tr>
             <tr v-for="todo in todos">
               <th>{{ todo.task }}</th>
-              <th>{{ todo.formattedDate }}</th>
+              <th>{{ todo.date }}</th>
               <th>
                 <div class="options-row">
                   <UButton
