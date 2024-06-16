@@ -4,4 +4,7 @@ export default defineNuxtConfig({
   components: true,
   css: ['./assets/css/main.css'],
   modules: ['@nuxtjs/supabase', 'nuxt-icons', "@nuxt/ui"],
+  supabase: {
+    redirect: false,
+  }
 })
