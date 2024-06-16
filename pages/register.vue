@@ -1,21 +1,28 @@
 <script setup>
-  const username = ref('');
+  const client = useSupabaseClient();
+
   const email = ref('');
   const password = ref('');
+  const errorMessage = ref('');
+  const successMessage = ref('');
 
-  function handleRegister(){
-    if(!username.value || !email.value || !password.value){
-      alert("Please fill out all fields.");
-      return;
+  async function handleRegister(){
+    errorMessage.value = '';
+    successMessage.value = '';
+
+    try{
+      const { data, error } = await client.auth.signUp({
+        email: email.value,
+        password: password.value
+      });
+
+      if(error) throw error;
+
+      successMessage.value = "Check email to confirm account.";
     }
-
-    console.log("User: " + username.value);
-    console.log("Email: " + email.value);
-    console.log("Password: " + password.value);
-
-    username.value = '';
-    email.value = '';
-    password.value = '';
+    catch(error){
+      errorMessage.value = error.message;
+    }
   }
 </script>
 
@@ -23,13 +30,13 @@
   <div class="form-container">
     <Header title="REGISTER"/>
     <form class="form">
-      <label for="username" class="form-label">Username</label><br>
-      <input type="text" id="username" name="username" class="form-input" v-model="username"><br>
       <label for="email" class="form-label">E-Mail</label><br>
       <input type="text" id="email" name="email" class="form-input" v-model="email"><br>
       <label for="password" class="form-label">Password</label><br>
       <input type="password" id="password" name="password" class="form-input" v-model="password"><br>
     </form>
+    <p class="error" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
+    <p class="success" v-if="successMessage.length > 0">{{ successMessage }}</p>
     <button class="submit-button" @click="handleRegister">Register</button>
     <NuxtLink to="/login"><a class="link">Already have an account? Login here</a></NuxtLink>
   </div>

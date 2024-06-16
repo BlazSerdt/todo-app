@@ -1,18 +1,30 @@
 <script setup>
-  const username = ref('');
+  const client = useSupabaseClient();
+  const router = useRouter();
+
+  const email = ref('');
   const password = ref('');
+  const errorMessage = ref('');
 
-  function handleLogin(){
-    if (!username.value || !password.value) {
-      alert('Please fill out all fields.');
-      return;
+  async function handleLogin(){
+    errorMessage.value = '';
+
+    try{
+      const { error } = await client.auth.signInWithPassword({
+        email: email.value,
+        password: password.value,
+      });
+
+      if(error) throw error;
+
+      router.push("/");
+
+      email.value = '';
+      password.value = '';
     }
-
-    console.log("User: " + username.value);
-    console.log("Password: " + password.value);
-
-    username.value = '';
-    password.value = '';
+    catch(error){
+      errorMessage.value = error.message;
+    }
   }
 </script>
 
@@ -20,11 +32,12 @@
   <div class="form-container">
     <Header title="LOGIN"/>
     <form class="form">
-      <label for="username" class="form-label">Username</label><br>
-      <input type="text" id="username" name="username" class="form-input" v-model="username"><br>
+      <label for="email" class="form-label">E-Mail</label><br>
+      <input type="text" id="email" name="email" class="form-input" v-model="email"><br>
       <label for="password" class="form-label">Password</label><br>
       <input type="password" id="password" name="password" class="form-input" v-model="password"><br>
     </form>
+    <p class="error" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
     <button class="submit-button" @click="handleLogin">Sign in</button>
     <NuxtLink to="/register"><a class="link">Dont have an account yet? Register here</a></NuxtLink>
   </div>
