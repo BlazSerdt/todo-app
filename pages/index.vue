@@ -45,7 +45,12 @@
         <input class="form-input" type="text" id="task" name="task" placeholder="Enter a task..." v-model="task" autocomplete="off">
         <input class="form-input" type="date" id="date" name="date" v-model="date">
       </form>
-      <button class="submit-button" @click="handleAddItem"><strong>+</strong> Add task</button>
+      <button class="submit-button" @click="handleAddItem">
+        <div class="button-content">
+          <UIcon name="i-heroicons-plus-circle-16-solid" />
+          <span>Add task</span>
+        </div>
+      </button>
       <div class="todo-list">
         <table class="tasks-table">
           <thead>
@@ -60,8 +65,28 @@
               <th>{{ todo.task }}</th>
               <th>{{ todo.formattedDate }}</th>
               <th>
-                <div>
-                  buttons
+                <div class="options-row">
+                  <UButton
+                      icon="i-heroicons-pencil-square"
+                      size="sm"
+                      color="orange"
+                      square
+                      variant="solid"
+                  />
+                  <UButton
+                      icon="i-heroicons-check-circle"
+                      size="sm"
+                      color="green"
+                      square
+                      variant="solid"
+                  />
+                  <UButton
+                      icon="i-heroicons-trash"
+                      size="sm"
+                      color="red"
+                      square
+                      variant="solid"
+                  />
                 </div>
               </th>
             </tr>

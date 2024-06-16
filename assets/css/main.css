@@ -1,6 +1,10 @@
 /* global styles */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800;900&display=swap');
 
+input:focus, textarea:focus, button:focus {
+    outline: none;
+}
+
 body{
     margin: 0;
     padding: 0;
@@ -155,3 +159,19 @@ th {
     font-size: 14px;
 }
 
+.options-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.button-content {
+    display: flex;
+    align-items: center;
+}
+
+.button-content span {
+    margin-left: 8px;
+}

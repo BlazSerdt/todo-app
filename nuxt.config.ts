@@ -3,5 +3,5 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   components: true,
   css: ['./assets/css/main.css'],
-  modules: ['@nuxtjs/supabase', 'nuxt-icons'],
+  modules: ['@nuxtjs/supabase', 'nuxt-icons', "@nuxt/ui"],
 })
