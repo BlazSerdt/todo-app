@@ -95,7 +95,8 @@
             </tr>
           </tbody>
         </table>
+      </div>
     </div>
-    </div><button class="logout" @click="handleLogout">Log out</button>
+    <button class="logout" @click="handleLogout">Log out</button>
   </div>
 </template>
