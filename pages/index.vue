@@ -75,15 +75,17 @@
     }
 
     try{
-      const { error } = await client.from('todos').insert({
+      // creates new record and returns it to save id in local todos array
+      // (otherwise id will be undefined and deleting wont work)
+      const { data, error } = await client.from('todos').insert({
         task: task.value,
         due_date: date.value,
         completed: false,
-      });
+      }).select();
 
       if(error) throw error;
 
-      todos.value.push({ task: task.value, date: formattedDate.value });
+      todos.value.push({ id: data[0].id, task: task.value, date: formattedDate.value });
 
       task.value = '';
       date.value = '';
