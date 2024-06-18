@@ -45,13 +45,13 @@
         if(data){
           data.forEach((todo) => {
             if(todo.date === null){
-              todos.value.push({ task: todo.task, date: 'No due date' });
+              todos.value.push({ id: todo.id, task: todo.task, date: 'No due date' });
             }
             else{
               // if due_date has a set value, it will be in YYYY-MM-DD format, so set date.value to the date of the task,
               // which triggers the computed formattedDate to format the date
               date.value = todo.due_date;
-              todos.value.push({ task: todo.task, date: formattedDate.value });
+              todos.value.push({ id: todo.id, task: todo.task, date: formattedDate.value });
 
               date.value = '';
             }
@@ -91,6 +91,21 @@
     catch(error){
       errorMessage.value = "Error while inserting todo";
       console.log(error.message);
+    }
+  }
+
+  async function handleDeleteItem(id){
+    try{
+      const { error } = await client.from('todos').delete().eq('id',  id);
+
+      if(error) throw error;
+
+      // removes deleted task from list
+      const indexToDelete = todos.value.findIndex((todo) => todo.id === id);
+      todos.value.splice(indexToDelete, 1);
+    }
+    catch(error){
+      errorMessage.value = "Error while deleting todo";
     }
   }
 </script>
@@ -148,6 +163,7 @@
                       color="red"
                       square
                       variant="solid"
+                      @click="handleDeleteItem(todo.id)"
                   />
                 </div>
               </th>
