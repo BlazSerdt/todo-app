@@ -9,6 +9,7 @@
   const task = ref('');
   const date = ref('');
   const todos = ref([]);
+  const errorMessage = ref('');
 
   const formattedDate = computed(() => {
     if (!date.value) return 'No due date'
@@ -28,16 +29,34 @@
     }
   }
 
-  function handleAddItem(){
+  async function handleAddItem(){
     if(!task.value){
       alert("Please enter a task");
       return;
     }
 
-    todos.value.push({ task: task.value, date: formattedDate.value });
+    if(!date.value){
+      date.value = null;
+    }
 
-    task.value = '';
-    date.value = '';
+    try{
+      const { error } = await client.from('todos').insert({
+        task: task.value,
+        due_date: date.value,
+        completed: false,
+      });
+
+      if(error) throw error;
+
+      todos.value.push({ task: task.value, date: formattedDate.value });
+
+      task.value = '';
+      date.value = '';
+    }
+    catch(error){
+      errorMessage.value = "Error while inserting todo";
+      console.log(error.message);
+    }
   }
 </script>
 
@@ -49,6 +68,7 @@
         <input class="form-input" type="text" id="task" name="task" placeholder="Enter a task..." v-model="task" autocomplete="off">
         <input class="form-input" type="date" id="date" name="date" v-model="date">
       </form>
+      <p class="error" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
       <button class="submit-button" @click="handleAddItem">
         <div class="button-content">
           <UIcon name="i-heroicons-plus-circle-16-solid" />
