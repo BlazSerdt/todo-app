@@ -45,13 +45,13 @@
         if(data){
           data.forEach((todo) => {
             if(todo.date === null){
-              todos.value.push({ id: todo.id, task: todo.task, date: 'No due date' });
+              todos.value.push({ id: todo.id, task: todo.task, date: 'No due date', status: todo.completed });
             }
             else{
               // if due_date has a set value, it will be in YYYY-MM-DD format, so set date.value to the date of the task,
               // which triggers the computed formattedDate to format the date
               date.value = todo.due_date;
-              todos.value.push({ id: todo.id, task: todo.task, date: formattedDate.value });
+              todos.value.push({ id: todo.id, task: todo.task, date: formattedDate.value, status: todo.completed });
 
               date.value = '';
             }
@@ -82,10 +82,9 @@
         due_date: date.value,
         completed: false,
       }).select();
-
       if(error) throw error;
 
-      todos.value.push({ id: data[0].id, task: task.value, date: formattedDate.value });
+      todos.value.push({ id: data[0].id, task: task.value, date: formattedDate.value, status: false });
 
       task.value = '';
       date.value = '';
@@ -96,10 +95,24 @@
     }
   }
 
+  async function handleCompleteItem(id){
+    try{
+      const { error } = await client.from('todos').update({ completed: true }).eq('id', id);
+      if(error) throw error;
+
+      // removes deleted task from list
+      const indexToDelete = todos.value.findIndex((todo) => todo.id === id);
+      todos.value[indexToDelete].status = true;
+    }
+    catch(error){
+      errorMessage.value = "Error while confirming todo";
+      console.log(error.message);
+    }
+  }
+
   async function handleDeleteItem(id){
     try{
       const { error } = await client.from('todos').delete().eq('id',  id);
-
       if(error) throw error;
 
       // removes deleted task from list
@@ -108,6 +121,7 @@
     }
     catch(error){
       errorMessage.value = "Error while deleting todo";
+      console.log(error.message);
     }
   }
 </script>
@@ -133,31 +147,34 @@
             <tr>
               <th>TASK</th>
               <th>DUE DATE</th>
+              <th>STATUS</th>
               <th>OPTIONS</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="todos.length === 0">
-              <th colspan="3">No tasks found.</th>
+              <th colspan="4">No tasks found.</th>
             </tr>
             <tr v-for="todo in todos">
               <th>{{ todo.task }}</th>
               <th>{{ todo.date }}</th>
+              <th>{{ todo.status ? "Completed" : "Pending" }}</th>
               <th>
                 <div class="options-row">
-                  <UButton
+                  <UButton v-if="!todo.status"
                       icon="i-heroicons-pencil-square"
                       size="sm"
                       color="orange"
                       square
                       variant="solid"
                   />
-                  <UButton
+                  <UButton v-if="!todo.status"
                       icon="i-heroicons-check-circle"
                       size="sm"
                       color="green"
                       square
                       variant="solid"
+                      @click="handleCompleteItem(todo.id)"
                   />
                   <UButton
                       icon="i-heroicons-trash"
