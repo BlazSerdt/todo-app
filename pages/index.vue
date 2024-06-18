@@ -3,6 +3,10 @@
     middleware: ["auth"],
   })
 
+  onMounted(() => {
+    fetchData();
+  })
+
   const client = useSupabaseClient();
   const router = useRouter();
 
@@ -26,6 +30,37 @@
     }
     catch(error){
       console.log(error.message);
+    }
+  }
+
+  async function fetchData(){
+    // fetches logged in user, so it can be used in fetching the data that belongs to the user
+    const { data: { user } } = await client.auth.getUser()
+
+    if(user){
+      try{
+        const { data, error } = await client.from('todos').select("*").eq('user_id', user.id);
+        if(error) throw error;
+
+        if(data){
+          data.forEach((todo) => {
+            if(todo.date === null){
+              todos.value.push({ task: todo.task, date: 'No due date' });
+            }
+            else{
+              // if due_date has a set value, it will be in YYYY-MM-DD format, so set date.value to the date of the task,
+              // which triggers the computed formattedDate to format the date
+              date.value = todo.due_date;
+              todos.value.push({ task: todo.task, date: formattedDate.value });
+
+              date.value = '';
+            }
+          });
+        }
+      }
+      catch(error){
+        console.log(error.message);
+      }
     }
   }
 
