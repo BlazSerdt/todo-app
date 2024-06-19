@@ -15,6 +15,15 @@
   const todos = ref([]);
   const errorMessage = ref('');
 
+  // if editMode is true, update selected item, if false, treat as new item and insert
+  const editMode = ref(false);
+  const editedTodo = ref({
+    id: 0,
+    task: '',
+    date: '',
+    status: false,
+  })
+
   const formattedDate = computed(() => {
     if (!date.value) return 'No due date'
     const [year, month, day] = date.value.split('-')
@@ -64,6 +73,17 @@
     }
   }
 
+  // function that gets called when you click Add task/Save task,
+  // then calls appropriate function depending on if your in editMode or not
+  function handleClick(){
+    if(editMode.value){
+      handleUpdateItem();
+    }
+    else{
+      handleAddItem();
+    }
+  }
+
   async function handleAddItem(){
     if(!task.value){
       alert("Please enter a task");
@@ -93,6 +113,54 @@
       errorMessage.value = "Error while inserting todo";
       console.log(error.message);
     }
+  }
+
+  async function handleUpdateItem(){
+    try{
+      if(!date.value){
+        date.value = null;
+      }
+
+      const { error } = await client.from('todos').update({ task: task.value, due_date: date.value }).eq('id', editedTodo.value.id);
+      if(error) throw error;
+
+      // edits tasks list to have updated info
+      const indexToUpdate = todos.value.findIndex((todo) => todo.id === editedTodo.value.id);
+      todos.value[indexToUpdate].task = task.value;
+      todos.value[indexToUpdate].date = formattedDate.value;
+
+      // reset editMode and editedTodo
+      editMode.value = false;
+      editedTodo.value = {
+        id: 0,
+        task: '',
+        date: '',
+        status: false,
+      }
+
+      task.value = '';
+      date.value = '';
+    }
+    catch(error){
+      errorMessage.value = "Error while updating todo";
+    }
+  }
+
+  function handleEditItem(id){
+    const indexToEdit = todos.value.findIndex((todo) => todo.id === id);
+    const todoDate = todos.value[indexToEdit].date;
+
+    // if there is a due date, it reformats it so correct format for date picker input
+    if(todoDate !== 'No due date'){
+      const [day, month, year] = todoDate.split('/');
+      date.value = `${year}-${month}-${day}`;
+    }
+
+    task.value = todos.value[indexToEdit].task;
+
+    editMode.value = true;
+    editedTodo.value = todos.value[indexToEdit];
+    console.log(editedTodo.value);
   }
 
   async function handleCompleteItem(id){
@@ -135,10 +203,14 @@
         <input class="form-input" type="date" id="date" name="date" v-model="date">
       </form>
       <p class="error" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
-      <button class="submit-button" @click="handleAddItem">
-        <div class="button-content">
+      <button class="submit-button" @click="handleClick">
+        <div class="button-content" v-if="!editMode">
           <UIcon name="i-heroicons-plus-circle-16-solid" />
           <span>Add task</span>
+        </div>
+        <div class="button-content" v-else>
+          <UIcon name="i-heroicons-check-circle-16-solid" />
+          <span>Save task</span>
         </div>
       </button>
       <div class="todo-list">
@@ -167,6 +239,7 @@
                       color="orange"
                       square
                       variant="solid"
+                      @click="handleEditItem(todo.id)"
                   />
                   <UButton v-if="!todo.status"
                       icon="i-heroicons-check-circle"

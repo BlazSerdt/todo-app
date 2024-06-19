@@ -162,6 +162,7 @@ thead tr th{
 
 tbody tr th{
     background-color: rgb(50, 50, 50);
+    overflow-wrap: break-word;
 }
 
 .options-row{
