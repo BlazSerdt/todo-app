@@ -26,6 +26,7 @@
 
   // todos holds all todos, while displayedTodos will change based on what filter user applies
   const displayedTodos = ref([]);
+  const currentFilter = ref('all');
 
   const formattedDate = computed(() => {
     if (!date.value) return 'No due date'
@@ -114,6 +115,8 @@
       task.value = '';
       date.value = '';
       errorMessage.value = '';
+
+      filterTodos();
     }
     catch(error){
       errorMessage.value = "Error while inserting todo";
@@ -146,6 +149,8 @@
 
       task.value = '';
       date.value = '';
+
+      filterTodos();
     }
     catch(error){
       errorMessage.value = "Error while updating todo";
@@ -166,7 +171,8 @@
 
     editMode.value = true;
     editedTodo.value = todos.value[indexToEdit];
-    console.log(editedTodo.value);
+
+    filterTodos();
   }
 
   async function handleCompleteItem(id){
@@ -177,6 +183,8 @@
       // removes deleted task from list
       const indexToDelete = todos.value.findIndex((todo) => todo.id === id);
       todos.value[indexToDelete].status = true;
+
+      filterTodos();
     }
     catch(error){
       errorMessage.value = "Error while confirming todo";
@@ -192,6 +200,8 @@
       // removes deleted task from list
       const indexToDelete = todos.value.findIndex((todo) => todo.id === id);
       todos.value.splice(indexToDelete, 1);
+
+      filterTodos();
     }
     catch(error){
       errorMessage.value = "Error while deleting todo";
@@ -199,16 +209,29 @@
     }
   }
 
+  function filterTodos(){
+    if(currentFilter.value === 'all'){
+      displayedTodos.value = todos.value;
+    } else if(currentFilter.value === 'pending'){
+      displayedTodos.value = todos.value.filter((todo) => !todo.status);
+    } else if(currentFilter.value === 'completed'){
+      displayedTodos.value = todos.value.filter((todo) => todo.status);
+    }
+  }
+
   function showAll(){
-    displayedTodos.value = todos.value;
+    currentFilter.value = 'all';
+    filterTodos();
   }
 
   function showPending(){
-    displayedTodos.value = todos.value.filter((todo) => !todo.status);
+    currentFilter.value = 'pending';
+    filterTodos();
   }
 
   function showCompleted(){
-    displayedTodos.value = todos.value.filter((todo) => todo.status);
+    currentFilter.value = 'completed';
+    filterTodos();
   }
 </script>
 
@@ -248,7 +271,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="todos.length === 0">
+            <tr v-if="displayedTodos.length === 0">
               <th colspan="4">No tasks found.</th>
             </tr>
             <tr v-for="todo in displayedTodos">
