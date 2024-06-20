@@ -213,6 +213,12 @@
           <span>Save task</span>
         </div>
       </button>
+      <div class="filter-container">
+        <p class="filter-text">Filter list:</p>
+        <button class="filter-button">All</button>
+        <button class="filter-button">Pending</button>
+        <button class="filter-button">Completed</button>
+      </div>
       <div class="todo-list">
         <table class="tasks-table">
           <thead>
