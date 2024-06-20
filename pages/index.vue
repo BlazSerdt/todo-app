@@ -24,6 +24,9 @@
     status: false,
   })
 
+  // todos holds all todos, while displayedTodos will change based on what filter user applies
+  const displayedTodos = ref([]);
+
   const formattedDate = computed(() => {
     if (!date.value) return 'No due date'
     const [year, month, day] = date.value.split('-')
@@ -65,6 +68,8 @@
               date.value = '';
             }
           });
+
+          displayedTodos.value = todos.value;
         }
       }
       catch(error){
@@ -86,7 +91,7 @@
 
   async function handleAddItem(){
     if(!task.value){
-      alert("Please enter a task");
+      errorMessage.value = 'Please enter task name.';
       return;
     }
 
@@ -108,6 +113,7 @@
 
       task.value = '';
       date.value = '';
+      errorMessage.value = '';
     }
     catch(error){
       errorMessage.value = "Error while inserting todo";
@@ -192,6 +198,18 @@
       console.log(error.message);
     }
   }
+
+  function showAll(){
+    displayedTodos.value = todos.value;
+  }
+
+  function showPending(){
+    displayedTodos.value = todos.value.filter((todo) => !todo.status);
+  }
+
+  function showCompleted(){
+    displayedTodos.value = todos.value.filter((todo) => todo.status);
+  }
 </script>
 
 <template>
@@ -215,9 +233,9 @@
       </button>
       <div class="filter-container">
         <p class="filter-text">Filter list:</p>
-        <button class="filter-button">All</button>
-        <button class="filter-button">Pending</button>
-        <button class="filter-button">Completed</button>
+        <button class="filter-button" @click="showAll">All</button>
+        <button class="filter-button" @click="showPending">Pending</button>
+        <button class="filter-button" @click="showCompleted">Completed</button>
       </div>
       <div class="todo-list">
         <table class="tasks-table">
@@ -233,7 +251,7 @@
             <tr v-if="todos.length === 0">
               <th colspan="4">No tasks found.</th>
             </tr>
-            <tr v-for="todo in todos">
+            <tr v-for="todo in displayedTodos">
               <th>{{ todo.task }}</th>
               <th>{{ todo.date }}</th>
               <th>{{ todo.status ? "Completed" : "Pending" }}</th>
