@@ -28,6 +28,29 @@
   const displayedTodos = ref([]);
   const currentFilter = ref('all');
 
+  let filterAllActive = true;
+  let filterPendingActive = false;
+  let filterCompletedActive = false;
+
+  // this highlights the button that was clicked to indicate what filter is used
+  watch(currentFilter, () => {
+    if(currentFilter.value === 'all'){
+      filterAllActive = true;
+      filterPendingActive = false;
+      filterCompletedActive = false;
+    }
+    else if(currentFilter.value === 'pending'){
+      filterAllActive = false;
+      filterPendingActive = true;
+      filterCompletedActive = false;
+    }
+    else{
+      filterAllActive = false;
+      filterPendingActive = false;
+      filterCompletedActive = true;
+    }
+  })
+
   const formattedDate = computed(() => {
     if (!date.value) return 'No due date'
     const [year, month, day] = date.value.split('-')
@@ -221,16 +244,31 @@
 
   function showAll(){
     currentFilter.value = 'all';
+
+    filterAllActive = true;
+    filterPendingActive = false;
+    filterCompletedActive = false;
+
     filterTodos();
   }
 
   function showPending(){
     currentFilter.value = 'pending';
+
+    filterAllActive = false;
+    filterPendingActive = true;
+    filterCompletedActive = false;
+
     filterTodos();
   }
 
   function showCompleted(){
     currentFilter.value = 'completed';
+
+    filterAllActive = false;
+    filterPendingActive = false;
+    filterCompletedActive = true;
+
     filterTodos();
   }
 </script>
@@ -256,9 +294,9 @@
       </button>
       <div class="filter-container">
         <p class="filter-text">Filter list:</p>
-        <button class="filter-button" @click="showAll">All</button>
-        <button class="filter-button" @click="showPending">Pending</button>
-        <button class="filter-button" @click="showCompleted">Completed</button>
+        <button v-bind:class="{'filter-active': filterAllActive, 'filter-inactive': !filterAllActive}" @click="showAll">All</button>
+        <button v-bind:class="{'filter-active': filterPendingActive, 'filter-inactive': !filterPendingActive}" @click="showPending">Pending</button>
+        <button v-bind:class="{'filter-active': filterCompletedActive, 'filter-inactive': !filterCompletedActive}" @click="showCompleted">Completed</button>
       </div>
       <div class="todo-list">
         <table class="tasks-table">
