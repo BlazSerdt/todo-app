@@ -12,7 +12,7 @@ body{
 }
 
 .form-shadow{
-    box-shadow: 0 0 32px 0 rgba(113, 21, 161, 0.4);
+    box-shadow: 0 0 24px 0 rgba(107, 243, 49, 0.4);
 }
 
 .form-label {
@@ -35,8 +35,10 @@ body{
 }
 
 tbody tr th{
-    background-color: rgb(50, 50, 50);
+    background-color: rgb(211, 211, 211);
     overflow-wrap: break-word;
+    color: black;
+    border-bottom: 1px solid #888888;
 }
 
 .filter-active{

@@ -278,11 +278,11 @@
     <div class="flex flex-col items-center p-5 border border-neutral-500 rounded-xl bg-neutral-700 form-shadow">
       <Header title="TODO LIST" />
       <form class="p-0 m-0 w-full">
-        <input class="w-full py-4 px-5 mt-1.5 mb-4 bg-neutral-800 rounded-lg border border-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-700 text-white" type="text" id="task" name="task" placeholder="Enter a task..." v-model.trim="task" autocomplete="off">
-        <input class="w-full py-4 px-5 mt-1.5 mb-4 bg-neutral-800 rounded-lg border border-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-700 text-white" type="date" id="date" name="date" v-model="date">
+        <input class="w-full py-4 px-5 mt-1.5 mb-4 bg-neutral-800 rounded-lg border border-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 text-white" type="text" id="task" name="task" placeholder="Enter a task..." v-model.trim="task" autocomplete="off">
+        <input class="w-full py-4 px-5 mt-1.5 mb-4 bg-neutral-800 rounded-lg border border-green-800 focus:outline-none focus:ring-2 focus:ring-green-700 text-white" type="date" id="date" name="date" v-model="date">
       </form>
       <p class="text-red-600 mb-2" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
-      <button class="py-3 px-4 mb-2.5 rounded-lg border-0 bg-purple-600 hover:bg-purple-700 text-base" @click="handleClick">
+      <button class="py-3 px-4 mb-2.5 rounded-lg border-0 bg-green-600 hover:bg-green-700 text-base" @click="handleClick">
         <div class="flex items-center" v-if="!editMode">
           <UIcon name="i-heroicons-plus-circle-16-solid" class="mr-2"/>
           <span>Add task</span>
@@ -310,7 +310,7 @@
           </thead>
           <tbody>
             <tr v-if="displayedTodos.length === 0">
-              <th colspan="4">No tasks found.</th>
+              <th class="font-normal p-2.5" colspan="4">No tasks found.</th>
             </tr>
             <tr v-for="todo in displayedTodos">
               <th class="font-normal text-sm py-2">{{ todo.task }}</th>
