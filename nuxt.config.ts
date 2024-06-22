@@ -11,5 +11,13 @@ export default defineNuxtConfig({
   ],
   supabase: {
     redirect: false,
+  },
+  app: {
+      head: {
+          title: "To Do It!",
+          link: [
+              { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+          ]
+      }
   }
 })
