@@ -3,7 +3,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   components: true,
   css: ['./assets/css/main.css'],
-  modules: ['@nuxtjs/supabase', 'nuxt-icons', "@nuxt/ui"],
+  modules: [
+      '@nuxtjs/supabase',
+      'nuxt-icons',
+      "@nuxt/ui",
+      "@nuxtjs/tailwindcss"
+  ],
   supabase: {
     redirect: false,
   }

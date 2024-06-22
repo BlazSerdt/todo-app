@@ -274,38 +274,38 @@
 </script>
 
 <template>
-  <div class="container">
-    <div class="todo-container">
+  <div class="flex flex-col items-center max-w-3xl">
+    <div class="flex flex-col items-center p-5 border border-neutral-500 rounded-xl bg-neutral-700 form-shadow">
       <Header title="TODO LIST" />
-      <form class="form">
-        <input class="form-input" type="text" id="task" name="task" placeholder="Enter a task..." v-model="task" autocomplete="off">
-        <input class="form-input" type="date" id="date" name="date" v-model="date">
+      <form class="p-0 m-0 w-full">
+        <input class="w-full py-4 px-5 mt-1.5 mb-4 bg-neutral-800 rounded-lg border border-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-700 text-white" type="text" id="task" name="task" placeholder="Enter a task..." v-model.trim="task" autocomplete="off">
+        <input class="w-full py-4 px-5 mt-1.5 mb-4 bg-neutral-800 rounded-lg border border-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-700 text-white" type="date" id="date" name="date" v-model="date">
       </form>
-      <p class="error" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
-      <button class="submit-button" @click="handleClick">
-        <div class="button-content" v-if="!editMode">
-          <UIcon name="i-heroicons-plus-circle-16-solid" />
+      <p class="text-red-600 mb-2" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
+      <button class="py-3 px-4 mb-2.5 rounded-lg border-0 bg-purple-600 hover:bg-purple-700 text-base" @click="handleClick">
+        <div class="flex items-center" v-if="!editMode">
+          <UIcon name="i-heroicons-plus-circle-16-solid" class="mr-2"/>
           <span>Add task</span>
         </div>
-        <div class="button-content" v-else>
-          <UIcon name="i-heroicons-check-circle-16-solid" />
+        <div class="flex items-center" v-else>
+          <UIcon name="i-heroicons-check-circle-16-solid" class="mr-2"/>
           <span>Save task</span>
         </div>
       </button>
-      <div class="filter-container">
-        <p class="filter-text">Filter list:</p>
+      <div class="flex flex-row items-center w-full">
+        <p class="text-base px-2.5 py-4">Filter list:</p>
         <button v-bind:class="{'filter-active': filterAllActive, 'filter-inactive': !filterAllActive}" @click="showAll">All</button>
         <button v-bind:class="{'filter-active': filterPendingActive, 'filter-inactive': !filterPendingActive}" @click="showPending">Pending</button>
         <button v-bind:class="{'filter-active': filterCompletedActive, 'filter-inactive': !filterCompletedActive}" @click="showCompleted">Completed</button>
       </div>
-      <div class="todo-list">
-        <table class="tasks-table">
-          <thead>
-            <tr>
-              <th>TASK</th>
-              <th>DUE DATE</th>
-              <th>STATUS</th>
-              <th>OPTIONS</th>
+      <div class="border-0 rounded-lg w-full max-h-96 mt-1 overflow-y-scroll ">
+        <table class="w-full p-0 border-spacing-0 rounded-lg table-fixed">
+          <thead class="text-center">
+            <tr class="bg-neutral-800">
+              <th class="py-3 px-0 font-normal text-sm">TASK</th>
+              <th class="py-3 px-0 font-normal text-sm">DUE DATE</th>
+              <th class="py-3 px-0 font-normal text-sm">STATUS</th>
+              <th class="py-3 px-0 font-normal text-sm">OPTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -313,11 +313,11 @@
               <th colspan="4">No tasks found.</th>
             </tr>
             <tr v-for="todo in displayedTodos">
-              <th>{{ todo.task }}</th>
-              <th>{{ todo.date }}</th>
-              <th>{{ todo.status ? "Completed" : "Pending" }}</th>
-              <th>
-                <div class="options-row">
+              <th class="font-normal text-sm py-2">{{ todo.task }}</th>
+              <th class="font-normal text-sm py-2">{{ todo.date }}</th>
+              <th class="font-normal text-sm py-2">{{ todo.status ? "Completed" : "Pending" }}</th>
+              <th class="font-normal text-sm py-2">
+                <div class="flex flex-row items-center justify-center gap-1.5 ">
                   <UButton v-if="!todo.status"
                       icon="i-heroicons-pencil-square"
                       size="sm"
@@ -349,6 +349,6 @@
         </table>
       </div>
     </div>
-    <button class="logout" @click="handleLogout">Log out</button>
+    <button class="py-2.5 px-4 mt-4 border-0 rounded-lg bg-red-700 text-base hover:bg-red-600" @click="handleLogout">Log out</button>
   </div>
 </template>
